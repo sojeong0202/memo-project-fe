@@ -25,12 +25,14 @@ apiClient.interceptors.request.use((config) => {
 })
 
 // 응답 인터셉터: 401/403 → 로그아웃 후 /login 리다이렉트
+// 단, 로그인 요청 자체(/api/auth/google)는 제외 (무한 리다이렉트 방지)
 apiClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status
-      if (status === 401 || status === 403) {
+      const url = error.config?.url ?? ''
+      if ((status === 401 || status === 403) && !url.includes('/api/auth/google')) {
         localStorage.removeItem('auth-storage')
         window.location.href = '/login'
       }
