@@ -90,19 +90,15 @@ function BackgroundCanvas() {
 }
 
 export default function LoginPage() {
-  const { token, login } = useAuth()
   const [isHovered, setIsHovered] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { token, login } = useAuth((msg) => setError(msg))
 
   if (token) return <Navigate to="/app" replace />
 
   const handleLogin = () => {
     setError(null)
-    try {
-      login()
-    } catch {
-      setError('로그인에 실패했어요. 다시 시도해주세요.')
-    }
+    login()
   }
 
   return (
