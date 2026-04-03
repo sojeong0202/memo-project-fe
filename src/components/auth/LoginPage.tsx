@@ -93,7 +93,6 @@ function BackgroundCanvas() {
 export default function LoginPage() {
   const { token, handleGoogleSuccess } = useAuth()
   const [error, setError] = useState<string | null>(null)
-  const [isHovered, setIsHovered] = useState(false)
 
   if (token) return <Navigate to="/app" replace />
 
@@ -104,7 +103,6 @@ export default function LoginPage() {
     >
       <BackgroundCanvas />
 
-      {/* 배경 글로우 오브 */}
       <div className="absolute top-1/4 left-1/3 w-96 h-96 rounded-full pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)', filter: 'blur(40px)' }} />
       <div className="absolute bottom-1/3 right-1/4 w-64 h-64 rounded-full pointer-events-none"
@@ -154,48 +152,47 @@ export default function LoginPage() {
 
         <div className="w-full h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
 
-        {/* GoogleLogin: 실제 인증 처리 (숨김) */}
-        <div style={{ display: 'none' }}>
-          <GoogleLogin
-            onSuccess={(res) => {
-              if (res.credential) {
-                handleGoogleSuccess(res.credential).catch(() => {
-                  setError('로그인에 실패했어요. 다시 시도해주세요.')
-                })
-              }
-            }}
-            onError={() => setError('Google 인증에 실패했어요.')}
-            useOneTap
-          />
-        </div>
-
-        {/* 커스텀 구글 버튼 — OneTap이 자동으로 뜨므로 클릭 유도 문구 */}
+        {/* 버튼 영역: 커스텀 디자인 위에 GoogleLogin 투명 오버레이 */}
         <div className="w-full flex flex-col gap-3">
-          <button
-            onClick={() => {
-              // OneTap prompt 수동 트리거 (google.accounts.id가 로드된 경우)
-              if (typeof window !== 'undefined' && (window as unknown as { google?: { accounts?: { id?: { prompt?: () => void } } } }).google?.accounts?.id?.prompt) {
-                (window as unknown as { google: { accounts: { id: { prompt: () => void } } } }).google.accounts.id.prompt()
-              }
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="w-full flex items-center justify-center gap-3 py-3 px-6 rounded-xl font-medium text-sm transition-all duration-200 cursor-pointer"
-            style={{
-              background: isHovered ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)',
-              border: isHovered ? '1px solid rgba(167,139,250,0.4)' : '1px solid rgba(255,255,255,0.1)',
-              color: '#f1f0f5',
-              boxShadow: isHovered ? '0 0 20px rgba(167,139,250,0.15)' : 'none',
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18">
-              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
-              <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853" />
-              <path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05" />
-              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.96L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335" />
-            </svg>
-            Google로 시작하기
-          </button>
+          <div className="relative w-full h-12">
+            {/* 커스텀 스타일 버튼 (시각적 레이어) */}
+            <div
+              className="absolute inset-0 flex items-center justify-center gap-3 rounded-xl font-medium text-sm pointer-events-none"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#f1f0f5',
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
+                <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853" />
+                <path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05" />
+                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.96L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335" />
+              </svg>
+              Google로 시작하기
+            </div>
+
+            {/* GoogleLogin 투명 오버레이 (실제 클릭 처리) */}
+            <div
+              className="absolute inset-0 overflow-hidden rounded-xl"
+              style={{ opacity: 0 }}
+            >
+              <GoogleLogin
+                onSuccess={(res) => {
+                  if (res.credential) {
+                    setError(null)
+                    handleGoogleSuccess(res.credential).catch(() => {
+                      setError('로그인에 실패했어요. 다시 시도해주세요.')
+                    })
+                  }
+                }}
+                onError={() => setError('Google 인증에 실패했어요.')}
+                width="360"
+                size="large"
+              />
+            </div>
+          </div>
 
           {error && (
             <p className="text-xs text-center" style={{ color: '#f87171' }}>{error}</p>
