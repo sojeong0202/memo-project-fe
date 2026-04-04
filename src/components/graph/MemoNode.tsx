@@ -2,25 +2,20 @@ import { Handle, Position, type NodeProps } from '@xyflow/react'
 import type { Node as MemoData } from '../../types'
 
 export default function MemoNode({ data: rawData, selected }: NodeProps) {
-  const data = rawData as unknown as MemoData
+  const data = rawData as unknown as MemoData & { nodeWidth?: number }
+  const w = data.nodeWidth ?? 180
+
   return (
     <>
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ opacity: 0, pointerEvents: 'none' }}
-      />
+      <Handle type="target" position={Position.Top} style={{ opacity: 0, pointerEvents: 'none' }} />
 
       <div
         style={{
-          background: selected
-            ? 'rgba(167,139,250,0.1)'
-            : 'rgba(255,255,255,0.04)',
+          background: selected ? 'rgba(167,139,250,0.1)' : 'rgba(255,255,255,0.04)',
           border: `1.5px solid ${selected ? '#a78bfa' : data.category_color + '99'}`,
           borderRadius: 12,
           padding: '10px 14px',
-          minWidth: 150,
-          maxWidth: 210,
+          width: w,
           backdropFilter: 'blur(8px)',
           boxShadow: selected
             ? '0 0 20px rgba(167,139,250,0.25)'
@@ -29,7 +24,6 @@ export default function MemoNode({ data: rawData, selected }: NodeProps) {
           cursor: 'pointer',
         }}
       >
-        {/* 카테고리 컬러 인디케이터 */}
         <div
           style={{
             width: 8,
@@ -41,7 +35,6 @@ export default function MemoNode({ data: rawData, selected }: NodeProps) {
           }}
         />
 
-        {/* 요약 텍스트 */}
         <p
           style={{
             color: '#f1f0f5',
@@ -57,7 +50,6 @@ export default function MemoNode({ data: rawData, selected }: NodeProps) {
           {data.summary}
         </p>
 
-        {/* 키워드 */}
         {data.keywords.length > 0 && (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 8 }}>
             {data.keywords.slice(0, 3).map((kw) => (
@@ -79,11 +71,7 @@ export default function MemoNode({ data: rawData, selected }: NodeProps) {
         )}
       </div>
 
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ opacity: 0, pointerEvents: 'none' }}
-      />
+      <Handle type="source" position={Position.Bottom} style={{ opacity: 0, pointerEvents: 'none' }} />
     </>
   )
 }
