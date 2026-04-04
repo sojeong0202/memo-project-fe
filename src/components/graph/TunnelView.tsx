@@ -115,8 +115,11 @@ function MemoCard({ node, pos, selected, onClick }: MemoCardProps) {
           ? '0 0 20px rgba(167,139,250,0.25)'
           : `0 0 10px ${node.category_color}22`,
         cursor: 'pointer',
-        transition: 'border-color 0.15s, box-shadow 0.15s',
+        transition: 'border-color 0.2s, box-shadow 0.2s',
         boxSizing: 'border-box',
+        // 카드마다 위치 기반으로 딜레이·속도 다르게 → 제각각 둥실둥실
+        animation: `floatY ${3.2 + (pos.x * 0.0011 + pos.y * 0.0007) % 1.4}s ease-in-out infinite`,
+        animationDelay: `-${(pos.x * 0.004 + pos.y * 0.003) % 3.5}s`,
       }}
     >
       {/* 카테고리 컬러 */}
