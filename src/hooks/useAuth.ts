@@ -8,7 +8,8 @@ export function useAuth(onError?: (msg: string) => void) {
   const handleCredential = async (credential: string) => {
     try {
       const auth = await loginWithGoogle(credential)
-      const me = await fetchMe()
+      // fetchMe에 토큰을 직접 전달 → setAuth 전에도 인증 헤더 포함
+      const me = await fetchMe(auth.access_token)
       setAuth(auth.access_token, me)
       window.location.href = '/app'
     } catch (e) {

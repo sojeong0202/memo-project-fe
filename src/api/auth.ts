@@ -16,7 +16,10 @@ export async function loginWithGoogle(token: string): Promise<AuthResponse> {
   return res.data
 }
 
-export async function fetchMe(): Promise<MeResponse> {
-  const res = await apiClient.get<MeResponse>('/api/auth/me')
+// token을 직접 받아 헤더에 꽂음 — setAuth 이전에도 인증 요청 가능
+export async function fetchMe(token: string): Promise<MeResponse> {
+  const res = await apiClient.get<MeResponse>('/api/auth/me', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   return res.data
 }
