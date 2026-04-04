@@ -91,7 +91,6 @@ function BackgroundCanvas() {
 }
 
 export default function LoginPage() {
-  const [isHovered, setIsHovered] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { token, handleCredential } = useAuth((msg) => setError(msg))
 
@@ -154,45 +153,22 @@ export default function LoginPage() {
         <div className="w-full h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
 
         <div className="w-full flex flex-col gap-3">
-          {/* 커스텀 버튼 위에 GoogleLogin 투명 오버레이 — ID Token 획득 */}
-          <div className="relative w-full h-12">
-            <div
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              className="absolute inset-0 flex items-center justify-center gap-3 rounded-xl font-medium text-sm pointer-events-none transition-all duration-200"
-              style={{
-                background: isHovered ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)',
-                border: isHovered ? '1px solid rgba(167,139,250,0.4)' : '1px solid rgba(255,255,255,0.1)',
-                color: '#f1f0f5',
-                boxShadow: isHovered ? '0 0 20px rgba(167,139,250,0.15)' : 'none',
+          {/* Google 공식 버튼을 직접 렌더링 (투명 오버레이를 씌우면 Google의 Clickjacking 보안으로 인해 팝업이 뜨지 않음) */}
+          <div className="w-full flex justify-center mt-2 overflow-hidden rounded-xl" style={{ boxShadow: '0 4px 14px rgba(0,0,0,0.2)' }}>
+            <GoogleLogin
+              onSuccess={(res) => {
+                if (res.credential) {
+                  setError(null)
+                  void handleCredential(res.credential)
+                }
               }}
-            >
-              <svg width="18" height="18" viewBox="0 0 18 18">
-                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" />
-                <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853" />
-                <path d="M3.964 10.707A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05" />
-                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.96L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335" />
-              </svg>
-              Google로 시작하기
-            </div>
-            <div
-              className="absolute inset-0 overflow-hidden rounded-xl"
-              style={{ opacity: 0 }}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <GoogleLogin
-                onSuccess={(res) => {
-                  if (res.credential) {
-                    setError(null)
-                    void handleCredential(res.credential)
-                  }
-                }}
-                onError={() => setError('Google 인증에 실패했어요.')}
-                width="360"
-                size="large"
-              />
-            </div>
+              onError={() => setError('Google 인증에 실패했어요.')}
+              width="360"
+              size="large"
+              theme="filled_black"
+              shape="rectangular"
+              text="continue_with"
+            />
           </div>
 
           {error && (

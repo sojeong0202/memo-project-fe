@@ -14,7 +14,9 @@ apiClient.interceptors.request.use((config) => {
     try {
       const parsed = JSON.parse(raw) as { state?: { token?: string } }
       const token = parsed?.state?.token
-      if (token) {
+      
+      // 이미 Authorization 헤더가 설정되어 있다면 덮어쓰지 않습니다. (예: fetchMe에서의 수동 설정 보호)
+      if (token && config.headers && !config.headers.Authorization) {
         config.headers.Authorization = `Bearer ${token}`
       }
     } catch {
