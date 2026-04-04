@@ -11,7 +11,7 @@ export function useAuth(onError?: (msg: string) => void) {
       // fetchMe에 토큰을 직접 전달 → setAuth 전에도 인증 헤더 포함
       const me = await fetchMe(auth.access_token)
       setAuth(auth.access_token, me)
-      window.location.href = '/app'
+      // 상태 업데이트 후 LoginPage 컴포넌트가 자동으로 재렌더링되며 /app으로 라우팅됩니다.
     } catch (e) {
       console.error('로그인 실패', e)
       onError?.('로그인에 실패했어요. 다시 시도해주세요.')
