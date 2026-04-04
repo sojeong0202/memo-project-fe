@@ -180,7 +180,7 @@ export default function TunnelView() {
   const { data, isLoading, isError } = useGraph()
   const { selectedNodeId, selectNode, closePanel } = useUiStore()
   const containerRef = useRef<HTMLDivElement>(null)
-  const [containerWidth, setContainerWidth] = useState(900)
+  const [containerWidth, setContainerWidth] = useState(() => Math.max(600, window.innerWidth - 64))
 
   // 컨테이너 너비 감지
   useEffect(() => {
