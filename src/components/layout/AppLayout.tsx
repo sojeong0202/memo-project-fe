@@ -1,18 +1,7 @@
 import { useUiStore } from '../../store/useUiStore'
 import Sidebar from './Sidebar'
 import HomeView from '../home/HomeView'
-
-// Phase 4/5에서 구현 예정
-function GraphView() {
-  return (
-    <div className="flex-1 flex items-center justify-center" style={{ color: '#6b6880' }}>
-      <div className="text-center flex flex-col gap-2">
-        <span className="text-4xl">🕸</span>
-        <p className="text-sm">2D 그래프 뷰 — Phase 4에서 구현 예정</p>
-      </div>
-    </div>
-  )
-}
+import GraphView from '../graph/GraphView'
 
 function TunnelView() {
   return (
